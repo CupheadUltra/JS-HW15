@@ -1,61 +1,51 @@
 let users = [
   {
     name: "Alice",
-    balance: 1500,
-    friends: ["Bob", "Charlie"],
-    skills: ["JavaScript", "React", "Node.js"],
+    balance: 1200,
+    friends: [{ name: "Bob" }, { name: "Charlie" }],
+    skills: ["JavaScript", "HTML", "CSS"],
   },
   {
     name: "Bob",
-    balance: 2400,
-    friends: ["Alice", "Charlie"],
-    skills: ["HTML", "CSS", "JavaScript"],
+    balance: 850,
+    friends: [{ name: "Alice" }, { name: "Charlie" }],
+    skills: ["Python", "JavaScript", "Django"],
   },
   {
     name: "Charlie",
-    balance: 3100,
-    friends: ["Alice"],
-    skills: ["Node.js", "Python", "React"],
+    balance: 1450,
+    friends: [{ name: "Alice" }],
+    skills: ["CSS", "HTML", "React"],
   },
 ];
 
 let totalBalance = users.reduce((sum, user) => sum + user.balance, 0);
-console.log("Загальна сума балансу:", totalBalance);
+console.log("Загальна сума балансу:", totalBalance); // 3500
 
-let friendName = "Alice";
-let usersWithFriend = users
-  .filter((user) => user.friends.includes(friendName))
-  .map((user) => user.name);
+let findUsersWithFriend = (friendName) =>
+  users
+    .filter((user) => user.friends.some((friend) => friend.name === friendName))
+    .map((user) => user.name);
+
 console.log(
-  `Користувачі, які мають друга з ім'ям ${friendName}:`,
-  usersWithFriend
-);
+  "Користувачі, які мають друга Charlie:",
+  findUsersWithFriend("Charlie")
+); // ["Alice", "Bob"]
 
 let sortedByFriends = users
   .slice()
-  .sort((a, b) => b.friends.length - a.friends.length)
+  .sort((a, b) => a.friends.length - b.friends.length)
   .map((user) => user.name);
-console.log("Користувачі, відсортовані за кількістю друзів:", sortedByFriends);
 
-let uniqueSkills = users.reduce((acc, user) => {
-  user.skills.forEach((skill) => {
-    if (!acc.includes(skill)) {
-      acc.push(skill);
-    }
-  });
-  return acc;
-}, []);
+console.log("Імена, відсортовані за кількістю друзів:", sortedByFriends); // ["Charlie", "Alice", "Bob"]
 
-for (let i = 0; i < uniqueSkills.length; i++) {
-  for (let j = i + 1; j < uniqueSkills.length; j++) {
-    if (uniqueSkills[i] > uniqueSkills[j]) {
-      let temp = uniqueSkills[i];
-      uniqueSkills[i] = uniqueSkills[j];
-      uniqueSkills[j] = temp;
-    }
-  }
-}
-console.log(
-  "Унікальні та відсортовані в алфавітному порядку навички:",
-  uniqueSkills
-);
+let uniqueSortedSkills = users
+  .reduce((skills, user) => {
+    user.skills.forEach((skill) => {
+      if (!skills.includes(skill)) skills.push(skill);
+    });
+    return skills;
+  }, [])
+  .sort();
+
+console.log("Унікальні вміння:", uniqueSortedSkills);
